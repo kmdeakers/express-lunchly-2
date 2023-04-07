@@ -17,6 +17,26 @@ router.get("/", async function (req, res, next) {
   return res.render("customer_list.html", { customers });
 });
 
+/** Show customer, given their full name in search bar */
+router.get("/search", async function (req, res) {
+
+  const name = req.query.search;
+  const [ firstName, lastName] = name.split(' ');
+
+  const customers = await Customer.all()
+  
+  let id = null
+  
+  for (let customer of customers) {
+    if (customer.firstName === firstName && customer.lastName === lastName) {
+      id = customer.id;
+    }
+  }
+
+  return res.redirect(`/${id}`);
+})
+
+
 /** Form to add a new customer. */
 
 router.get("/add/", async function (req, res, next) {
