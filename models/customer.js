@@ -66,7 +66,9 @@ class Customer {
   static async getTopTen() {
     console.log('i am running');
     const results = await db.query(
-      `SELECT first_name, last_name, COUNT(*) AS num_of_reservations
+      `SELECT customers.id, first_name AS "firstName",
+           last_name AS "lastName",
+            COUNT(*) AS num_of_reservations
            FROM customers
            JOIN reservations
              ON customers.id = reservations.customer_id
@@ -75,9 +77,14 @@ class Customer {
            LIMIT 10`
     );
 
+  //   ////  {
+  //   first_name: 'David',
+  //   last_name: 'Martin',
+  //   num_of_reservations: '6'
+  // }
     const topTenCustomers = results.rows;
-
-    return topTenCustomers.rows.map(customer => new Customer(customer));
+    console.log("topTen:", topTenCustomers)
+    return topTenCustomers.map(customer => new Customer(customer));
   }
 
   /** get all reservations for this customer. */

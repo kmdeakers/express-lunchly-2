@@ -17,9 +17,21 @@ router.get("/", async function (req, res, next) {
   return res.render("customer_list.html", { customers });
 });
 
+/** Returns and lists the top 10 customers based on
+ * how many reservations they have.
+ */
+router.get("/top-ten/", async function(req, res) {
+  console.log('i am running');
+  const topTenCustomers = await Customer.getTopTen();
+
+  console.log('topTenCustomers:', topTenCustomers);
+
+  return res.render('topten.html', { topTenCustomers });
+});
+
 /** Show customer, given their full name in search bar */
 router.get("/search", async function (req, res) {
-
+  
   const name = req.query.search;
   const [ firstName, lastName] = name.split(' ');
 
@@ -70,9 +82,10 @@ router.get("/:id/", async function (req, res, next) {
 
 router.get("/:id/edit/", async function (req, res, next) {
   const customer = await Customer.get(req.params.id);
-
-  res.render("customer_edit_form.html", { customer });
+  
+  return res.render("customer_edit_form.html", { customer });
 });
+
 
 /** Handle editing a customer. */
 
@@ -112,17 +125,6 @@ router.post("/:id/add-reservation/", async function (req, res, next) {
   return res.redirect(`/${customerId}/`);
 });
 
-/** Returns and lists the top 10 customers based on
- * how many reservations they have.
- */
-router.get("/top-ten/", async function(req, res) {
-  console.log('i am running');
-  const topTenCustomers = await Customer.getTopTen();
-
-  console.log('topTenCustomers:', topTenCustomers);
-
-  return res.render('topten.html');
-});
 
 
 
