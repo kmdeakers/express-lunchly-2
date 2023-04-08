@@ -24,9 +24,9 @@ router.get("/search", async function (req, res) {
   const [ firstName, lastName] = name.split(' ');
 
   const customers = await Customer.all()
-  
+
   let id = null
-  
+
   for (let customer of customers) {
     if (customer.firstName === firstName && customer.lastName === lastName) {
       id = customer.id;
@@ -111,5 +111,19 @@ router.post("/:id/add-reservation/", async function (req, res, next) {
 
   return res.redirect(`/${customerId}/`);
 });
+
+/** Returns and lists the top 10 customers based on
+ * how many reservations they have.
+ */
+router.get("/top-ten/", async function(req, res) {
+  console.log('i am running');
+  const topTenCustomers = await Customer.getTopTen();
+
+  console.log('topTenCustomers:', topTenCustomers);
+
+  return res.render('topten.html');
+});
+
+
 
 module.exports = router;
